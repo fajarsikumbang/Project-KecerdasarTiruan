@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Konsultasi Kekurangan Nutrisi pada Tanaman Padi</title>
+    <!-- Tambahkan Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Konsultasi Kekurangan Nutrisi pada Tanaman Padi</h1>
+        <form id="search-form" class="card p-4">
+            <div class="form-group">
+                <label for="symptom">Gejala Kekurangan:</label>
+                <input type="text" class="form-control" id="symptom" name="symptom" required>
+            </div>
+            <div class="form-group">
+                <label for="growth_phase">Fase Pertumbuhan Padi:</label>
+                <input type="text" class="form-control" id="growth_phase" name="growth_phase" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </form>
+        
+        <h2 class="text-center mt-5">Hasil:</h2>
+        <div id="results" class="card p-4"></div>
+    </div>
+
+    <!-- Tambahkan Bootstrap JS dan Popper.js -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#search-form').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/search',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        $('#results').empty();
+                        if (data.length > 0) {
+                            data.forEach(function(item) {
+                                $('#results').append(
+                                    '<div class="card"><div class="card-body">' +
+                                    '<h5 class="card-title"><strong>Defisiensi Nutrisi:</strong> ' + item['Defisiensi Nutrisi'] + '</h5>' +
+                                    '<p class="card-text"><strong>Metode Pengendalian:</strong> ' + item['Metode Pengendalian'] + '</p>' +
+                                    '<p class="card-text"><strong>Produk Nutrisi yang Direkomendasikan:</strong> ' + item['Produk Nutrisi yang Direkomendasikan'] + '</p>' +
+                                    '</div></div>'
+                                );
+                            });
+                        } else {
+                            $('#results').append('<p class="text-center">Tidak ada hasil yang cocok ditemukan.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
